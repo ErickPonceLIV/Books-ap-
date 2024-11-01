@@ -45,9 +45,24 @@ const createBook = async (req, res) => {
 }
 
 // READ
+const getAllBooks = async (req, res) => {
+  try {
+    const books = await Book.find({ isActive: true })
+    // Validamos que no existan libros
+    if (!books) {
+      return res.status(404).json({ message: 'No books found' })
+    }
+    res.status(200).json(books)
+  } catch (error) {
+
+  }
+}
 
 // UPDATE
 
 // DELETE
 
-export { createBook }
+export {
+  createBook,
+  getAllBooks
+}
