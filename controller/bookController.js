@@ -47,22 +47,56 @@ const createBook = async (req, res) => {
 // READ
 const getAllBooks = async (req, res) => {
   try {
-    const books = await Book.find({ isActive: true })
+    const books = await Book.find({ isActive: true }).populate('authors', 'firstName lastName bio birthDate -_id')
     // Validamos que no existan libros
     if (!books) {
       return res.status(404).json({ message: 'No books found' })
     }
     res.status(200).json(books)
   } catch (error) {
-
+    res.status(400).json({ message: error.message })
+  }
+}
+// Obtener un solo libro por ID
+const getBookById = async (req, res) => {
+  // Validamos que el ID se un ObjectId de mongoDB (24 caracteres alfanumericos en hexadecimal)
+  if (!req.params.bookId.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(400).json({ message: 'Invalid book ID' })
+  }
+  try {
+    const book = await Book
+      .find({ _id: req.params.bookId, isActive: true })
+      .populate('authors', 'firstName lastName bio birthDate -_id')
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' })
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message })
   }
 }
 
 // UPDATE
+const updateBook = async (req, res) => {
+  if (!req.params.bookId.match(/^[0-9a-fA-F]{24}$/)) {
+    return res.status(400).json({ message: 'Invalid book ID' })
+  }
+  try {
+    const book = await Book
+      .findByIdAndUpdate(req.params.bookId, req.body, { new: true })
+      .populate('authors', 'firstName lastName bio birthDate -_id')
+    if (!book) {
+      return res.status(404).json({ message: 'Book not found' })
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message })
+  }
+}
 
 // DELETE
 
 export {
   createBook,
-  getAllBooks
+  getAllBooks,
+  getBookById,
+  updateBook
 }

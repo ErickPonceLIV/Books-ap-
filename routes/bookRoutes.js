@@ -1,9 +1,12 @@
 import express from 'express'
-import { createBook } from '../controllers/bookController.js'
+import { createBook, getAllBooks, getBookById, updateBookbyId } from '../controllers/bookController.js'
 
 const bookRoutes = express.Router()
 
 // Rutas de libros
 bookRoutes.post('/', createBook)
+bookRoutes.get('/', getAllBooks)
+bookRoutes.get('/:id', getBookById)
+bookRoutes.patch('/:id', updateBookbyId)
 
 export default bookRoutes
