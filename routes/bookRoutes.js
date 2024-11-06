@@ -1,5 +1,5 @@
 import express from 'express'
-import { createBook, getAllBooks, getBookById, updateBookbyId } from '../controllers/bookController.js'
+import { createBook, getAllBooks, getBookById, updateBookbyId, deleteBookById } from '../controllers/bookController.js'
 
 const bookRoutes = express.Router()
 
@@ -8,5 +8,6 @@ bookRoutes.post('/', createBook)
 bookRoutes.get('/', getAllBooks)
 bookRoutes.get('/:id', getBookById)
 bookRoutes.patch('/:id', updateBookbyId)
+bookRoutes.delete('/:id', deleteBookById)
 
 export default bookRoutes
